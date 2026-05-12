@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OnlyVendor — Kaos & Sablon Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d0d;
+    --cream: #f5f0e8;
+    --rust: #c94a2b;
+    --sand: #e8d5b0;
+    --steel: #8a8a8a;
+    --paper: #faf7f2;
+    --accent: #1a3a2a;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    background: var(--ink);
+    color: var(--cream);
+    text-align: center;
+    padding: 10px;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    border-bottom: 2px solid var(--ink);
+    background: var(--paper);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 4px;
+    color: var(--ink);
+  }
+
+  .nav-logo span { color: var(--rust); }
+
+  .nav-tag {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--steel);
+    border: 1px solid var(--steel);
+    padding: 6px 14px;
+  }
+
+  /* HERO */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 90vh;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .hero-left {
+    padding: 80px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-right: 2px solid var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-label::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--rust);
+  }
+
+  .hero-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 8vw, 120px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    color: var(--ink);
+    margin-bottom: 40px;
+  }
+
+  .hero-headline em {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--rust);
+    display: block;
+  }
+
+  .hero-sub {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--steel);
+    max-width: 420px;
+    margin-bottom: 50px;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 18px 40px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 4px -4px -4px 4px;
+    border: 2px solid var(--rust);
+    z-index: -1;
+    transition: all 0.3s;
+  }
+
+  .btn-primary:hover {
+    background: var(--rust);
+    transform: translate(-2px, -2px);
+  }
+
+  .btn-primary:hover::after {
+    transform: translate(2px, 2px);
+  }
+
+  .hero-note {
+    font-size: 12px;
+    color: var(--steel);
+    letter-spacing: 1px;
+  }
+
+  .hero-right {
+    background: var(--sand);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .hero-img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    color: var(--steel);
+  }
+
+  .hero-img-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .hero-img-placeholder .ph-text {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 40px;
+  }
+
+  .hero-badge {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    width: 110px;
+    height: 110px;
+    background: var(--rust);
+    color: var(--cream);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    animation: spin-slow 12s linear infinite;
+  }
+
+  .hero-badge span:first-child {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  .hero-badge span:last-child {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .hero-stat-strip {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--ink);
+    color: var(--cream);
+    display: flex;
+    justify-content: space-around;
+    padding: 14px 40px;
+  }
+
+  .hero-stat { text-align: center; }
+  .hero-stat strong {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--rust);
+    display: block;
+  }
+  .hero-stat small { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--sand); }
+
+  /* OPENING */
+  .opening {
+    padding: 100px 60px;
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .section-tag {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 24px;
+    display: block;
+  }
+
+  .opening h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.3;
+    margin-bottom: 30px;
+    color: var(--ink);
+  }
+
+  .opening p {
+    font-size: 17px;
+    line-height: 1.9;
+    color: var(--steel);
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  /* DIVIDER */
+  .divider {
+    height: 2px;
+    background: var(--ink);
+    margin: 0 60px;
+    position: relative;
+  }
+
+  .divider::after {
+    content: 'x';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--paper);
+    padding: 0 20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--rust);
+  }
+
+  /* BENEFITS */
+  .benefits {
+    padding: 100px 60px;
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  .benefits-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 70px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 40px;
+  }
+
+  .benefits-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 6vw, 80px);
+    line-height: 0.95;
+    letter-spacing: 2px;
+  }
+
+  .benefits-header h2 em {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--rust);
+    display: block;
+  }
+
+  .benefits-header p {
+    max-width: 300px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #aaa;
+    text-align: right;
+  }
+
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+
+  .benefit-item {
+    padding: 50px 40px;
+    border: 1px solid #222;
+    position: relative;
+    transition: background 0.3s;
+  }
+
+  .benefit-item:hover { background: #181818; }
+
+  .benefit-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    color: #1e1e1e;
+    line-height: 1;
+    margin-bottom: 20px;
+    transition: color 0.3s;
+  }
+
+  .benefit-item:hover .benefit-num { color: var(--rust); opacity: 0.4; }
+
+  .benefit-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    color: var(--cream);
+  }
+
+  .benefit-desc {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #888;
+  }
+
+  /* WHY / REASONS */
+  .reasons {
+    padding: 100px 60px;
+  }
+
+  .reasons-intro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-bottom: 80px;
+    align-items: center;
+  }
+
+  .reasons-intro h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 6vw, 80px);
+    line-height: 0.95;
+    letter-spacing: 2px;
+  }
+
+  .reasons-intro h2 em {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--rust);
+    display: block;
+    font-size: 0.7em;
+  }
+
+  .reasons-intro p {
+    font-size: 16px;
+    line-height: 1.9;
+    color: var(--steel);
+  }
+
+  .reasons-list { display: flex; flex-direction: column; gap: 0; }
+
+  .reason-row {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 40px;
+    padding: 40px 0;
+    border-top: 1px solid #ddd;
+    align-items: start;
+    transition: all 0.3s;
+  }
+
+  .reason-row:last-child { border-bottom: 1px solid #ddd; }
+
+  .reason-row:hover { padding-left: 20px; }
+
+  .reason-index {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--sand);
+    line-height: 1;
+  }
+
+  .reason-content h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+
+  .reason-content p {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--steel);
+  }
+
+  /* TESTIMONIALS */
+  .testimonials {
+    background: var(--cream);
+    padding: 100px 60px;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .testi-header {
+    text-align: center;
+    margin-bottom: 70px;
+  }
+
+  .testi-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 6vw, 80px);
+    letter-spacing: 3px;
+  }
+
+  .testi-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 20px;
+  }
+
+  .testi-card {
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    padding: 40px;
+    position: relative;
+    transition: transform 0.3s;
+  }
+
+  .testi-card:hover { transform: translate(-4px, -4px); box-shadow: 4px 4px 0 var(--ink); }
+
+  .testi-card.featured {
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  .testi-quote {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 17px;
+    line-height: 1.7;
+    margin-bottom: 30px;
+  }
+
+  .testi-card.featured .testi-quote { font-size: 21px; }
+
+  .testi-author {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+  }
+
+  .testi-card.featured .testi-author { border-top-color: #333; }
+
+  .testi-avatar {
+    width: 44px;
+    height: 44px;
+    background: var(--sand);
+    border-radius: 50%;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--ink);
+  }
+
+  .testi-card.featured .testi-avatar { background: var(--rust); color: var(--cream); }
+
+  .testi-name {
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+
+  .testi-role {
+    font-size: 12px;
+    color: var(--steel);
+    letter-spacing: 1px;
+  }
+
+  .testi-card.featured .testi-role { color: #888; }
+
+  .testi-stars {
+    color: var(--rust);
+    font-size: 14px;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    font-family: 'Bebas Neue', sans-serif;
+  }
+
+  /* URGENCY */
+  .urgency {
+    padding: 100px 60px;
+    background: var(--rust);
+    color: var(--cream);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .urgency::before {
+    content: 'NOW';
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 400px;
+    color: rgba(255,255,255,0.04);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    letter-spacing: 20px;
+  }
+
+  .urgency h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 7vw, 90px);
+    letter-spacing: 4px;
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  .urgency p {
+    font-size: 18px;
+    line-height: 1.7;
+    max-width: 600px;
+    margin: 0 auto 50px;
+    opacity: 0.85;
+  }
+
+  .countdown-strip {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 50px;
+  }
+
+  .count-box {
+    background: rgba(0,0,0,0.25);
+    padding: 20px 30px;
+    border: 1px solid rgba(255,255,255,0.2);
+    text-align: center;
+    min-width: 90px;
+  }
+
+  .count-box strong {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    display: block;
+    line-height: 1;
+  }
+
+  .count-box small {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  .count-sep {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    line-height: 1;
+    padding: 20px 10px;
+    opacity: 0.5;
+  }
+
+  .btn-light {
+    background: var(--cream);
+    color: var(--ink);
+    padding: 18px 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s;
+  }
+
+  .btn-light:hover { background: var(--ink); color: var(--cream); }
+
+  /* BONUS */
+  .bonus {
+    padding: 100px 60px;
+    background: var(--accent);
+    color: var(--cream);
+  }
+
+  .bonus-header {
+    margin-bottom: 60px;
+  }
+
+  .bonus-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 6vw, 80px);
+    letter-spacing: 3px;
+  }
+
+  .bonus-header h2 span { color: var(--rust); }
+
+  .bonus-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: #112;
+  }
+
+  .bonus-item {
+    background: var(--accent);
+    padding: 40px 36px;
+    position: relative;
+    transition: background 0.3s;
+  }
+
+  .bonus-item:hover { background: #1e4a34; }
+
+  .bonus-icon {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: var(--rust);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+
+  .bonus-item h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+  }
+
+  .bonus-item p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #9bb;
+  }
+
+  .bonus-tag {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--rust);
+    color: var(--cream);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+  }
+
+  /* CTA SECTION */
+  .cta-section {
+    padding: 120px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .cta-left h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 7vw, 100px);
+    line-height: 0.9;
+    letter-spacing: 3px;
+    margin-bottom: 30px;
+  }
+
+  .cta-left h2 em {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--rust);
+    display: block;
+    font-size: 0.65em;
+    letter-spacing: 1px;
+  }
+
+  .cta-left p {
+    font-size: 16px;
+    line-height: 1.9;
+    color: var(--steel);
+    margin-bottom: 40px;
+  }
+
+  .price-block {
+    margin-bottom: 40px;
+  }
+
+  .price-old {
+    font-size: 20px;
+    color: var(--steel);
+    text-decoration: line-through;
+    margin-bottom: 8px;
+  }
+
+  .price-new {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    letter-spacing: 3px;
+    line-height: 1;
+    color: var(--rust);
+  }
+
+  .price-new small {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    color: var(--steel);
+    letter-spacing: 1px;
+  }
+
+  .cta-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: var(--cream);
+    padding: 50px;
+    border: 2px solid var(--ink);
+    position: relative;
+  }
+
+  .cta-form::before {
+    content: 'PESAN SEKARANG';
+    position: absolute;
+    top: -14px;
+    left: 30px;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 4px 16px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+
+  .form-group label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: var(--paper);
+    border: 1.5px solid #ccc;
+    padding: 14px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.3s;
+    width: 100%;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--rust);
+  }
+
+  .form-group textarea { resize: vertical; min-height: 100px; }
+
+  .btn-full {
+    background: var(--rust);
+    color: var(--cream);
+    padding: 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s;
+  }
+
+  .btn-full:hover { background: var(--ink); }
+
+  /* GUARANTEE */
+  .guarantee {
+    padding: 80px 60px;
+    background: var(--sand);
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .guarantee-inner {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 60px;
+    align-items: center;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .guarantee-seal {
+    width: 160px;
+    height: 160px;
+    border: 4px solid var(--ink);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .guarantee-seal::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 2px dashed var(--ink);
+    border-radius: 50%;
+  }
+
+  .guarantee-seal strong {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: var(--rust);
+    line-height: 1;
+  }
+
+  .guarantee-seal span {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .guarantee-content h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 38px;
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+  }
+
+  .guarantee-content p {
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--steel);
+  }
+
+  /* NB */
+  .nb-section {
+    padding: 60px;
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  .nb-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    border: 1px solid #333;
+    padding: 40px;
+  }
+
+  .nb-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 4px;
+    color: var(--rust);
+    margin-bottom: 24px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 16px;
+  }
+
+  .nb-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .nb-list li {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #aaa;
+    padding-left: 24px;
+    position: relative;
+  }
+
+  .nb-list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--rust);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    color: #555;
+    padding: 40px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #222;
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 4px;
+    color: var(--cream);
+  }
+
+  .footer-logo span { color: var(--rust); }
+
+  footer p { font-size: 12px; letter-spacing: 1px; }
+
+  /* SCROLL ANIMATIONS */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    nav { padding: 16px 30px; }
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-left { padding: 60px 30px; border-right: none; border-bottom: 2px solid var(--ink); }
+    .hero-right { min-height: 400px; }
+    .benefits { padding: 70px 30px; }
+    .benefits-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .benefits-header p { text-align: left; }
+    .benefits-grid { grid-template-columns: 1fr; }
+    .reasons { padding: 70px 30px; }
+    .reasons-intro { grid-template-columns: 1fr; gap: 30px; }
+    .testimonials { padding: 70px 30px; }
+    .testi-grid { grid-template-columns: 1fr; }
+    .urgency { padding: 70px 30px; }
+    .bonus { padding: 70px 30px; }
+    .bonus-grid { grid-template-columns: 1fr; }
+    .cta-section { grid-template-columns: 1fr; padding: 70px 30px; gap: 50px; }
+    .guarantee { padding: 60px 30px; }
+    .guarantee-inner { grid-template-columns: 1fr; text-align: center; justify-items: center; }
+    .nb-section { padding: 40px 30px; }
+    footer { padding: 30px; flex-direction: column; gap: 12px; text-align: center; }
+    .opening { padding: 70px 30px; }
+    .divider { margin: 0 30px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">Gratis konsultasi desain untuk order pertama kamu</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Only<span>Vendor</span></div>
+  <div class="nav-tag">Est. 2018 — Vendor Terpercaya</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-label">Kaos, Sablon & Custom Apparel</div>
+    <h1 class="hero-headline">
+      Kaos
+      <em>Bukan</em>
+      Kaleng-kaleng.
+    </h1>
+    <p class="hero-sub">
+      OnlyVendor hadir buat kamu yang bosan produk asal jadi. Kami vendor kaos dan sablon yang serius — mulai dari bahan, tinta, hingga jahitan.
+    </p>
+    <div class="hero-cta-group">
+      <a href="#cta" class="btn-primary">Pesan Sekarang</a>
+      <span class="hero-note">Min. order 12 pcs</span>
+    </div>
+    <div class="hero-stat-strip">
+      <div class="hero-stat"><strong>3.200+</strong><small>Order Selesai</small></div>
+      <div class="hero-stat"><strong>98%</strong><small>Puas & Repeat Order</small></div>
+      <div class="hero-stat"><strong>7 Hari</strong><small>Rata-rata Produksi</small></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img-placeholder">
+      <!-- Ganti src berikut dengan foto produk kamu -->
+      <div class="ph-text"><img src="https://i.pinimg.com/736x/b4/36/ec/b436ec260b723577b64fa3784ffba95a.jpg"></div>
+    </div>
+    <div class="hero-badge">
+      <span>100%</span>
+      <span>Kualitas Terjamin</span>
+    </div>
+  </div>
+</section>
+
+<!-- OPENING -->
+<section class="opening fade-up">
+  <span class="section-tag">Kenapa OnlyVendor</span>
+  <h2>Vendor banyak, tapi tidak semua bisa dipercaya dari awal sampai barang di tangan kamu.</h2>
+  <p>Kami tahu frustrasi order kaos yang hasil akhirnya jauh dari ekspektasi. Warna pudar, sablon retak, jahitan mbleber — itu bukan standar kami. OnlyVendor berdiri justru karena masalah-masalah itu nyata dan bisa diselesaikan dengan proses yang benar.</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- BENEFITS -->
+<section class="benefits">
+  <div class="benefits-header fade-up">
+    <h2>Apa yang<br><em>kamu dapat</em></h2>
+    <p>Setiap detail dipikirkan, bukan sekadar dieksekusi. Ini yang membedakan kami dari vendor biasa.</p>
+  </div>
+  <div class="benefits-grid">
+    <div class="benefit-item fade-up">
+      <div class="benefit-num">01</div>
+      <div class="benefit-title">Bahan Pilihan Tanpa Kompromi</div>
+      <p class="benefit-desc">Cotton combed 30s, CVC, hingga bahan dry-fit tersedia. Kami tidak pakai bahan kiloan tanpa identitas — kamu tahu persis apa yang kamu pesan.</p>
+    </div>
+    <div class="benefit-item fade-up">
+      <div class="benefit-num">02</div>
+      <div class="benefit-title">Sablon Awet & Tajam</div>
+      <p class="benefit-desc">Teknik plastisol, discharge, DTF, dan rubber — dipilih sesuai desain kamu. Hasilnya awet dicuci berkali-kali tanpa retak atau pudar cepat.</p>
+    </div>
+    <div class="benefit-item fade-up">
+      <div class="benefit-num">03</div>
+      <div class="benefit-title">Jahitan Rapi, Finishing Beres</div>
+      <p class="benefit-desc">Setiap kaos lewat quality control sebelum packing. Tidak ada yang lolos dengan cacat jahitan, salah ukuran, atau sablon miring.</p>
+    </div>
+    <div class="benefit-item fade-up">
+      <div class="benefit-num">04</div>
+      <div class="benefit-title">Harga Transparan</div>
+      <p class="benefit-desc">Tidak ada biaya tersembunyi. Semua sudah termasuk: bahan, sablon, jahit, dan packing. Kamu tahu angkanya dari awal, tidak kaget di akhir.</p>
+    </div>
+    <div class="benefit-item fade-up">
+      <div class="benefit-num">05</div>
+      <div class="benefit-title">Update Produksi Real-Time</div>
+      <p class="benefit-desc">Kamu tidak perlu tanya-tanya. Kami kirim laporan progres produksi secara berkala — dari cutting sampai packing selesai.</p>
+    </div>
+    <div class="benefit-item fade-up">
+      <div class="benefit-num">06</div>
+      <div class="benefit-title">Siap Skala Besar & Kecil</div>
+      <p class="benefit-desc">Mulai dari 12 pcs untuk komunitas kecil, sampai ribuan pcs untuk event besar — kapasitas produksi kami siap menyesuaikan kebutuhan kamu.</p>
+    </div>
+  </div>
+</section>
+
+<!-- REASONS -->
+<section class="reasons">
+  <div class="reasons-intro fade-up">
+    <h2>Alasan<br>Memilih<br><em>OnlyVendor</em></h2>
+    <p>Bukan sekadar klaim. Ini alasan konkret kenapa lebih dari 3.000 order dipercayakan ke kami — dan kenapa mereka terus balik lagi.</p>
+  </div>
+  <div class="reasons-list">
+    <div class="reason-row fade-up">
+      <div class="reason-index">01</div>
+      <div class="reason-content">
+        <h3>Konsultasi Desain Gratis Sebelum Produksi</h3>
+        <p>Tim kami bantu review desain kamu sebelum masuk mesin. Kalau ada potensi masalah — warna kurang kontras, ukuran sablon tidak proporsional — kami kasih tahu duluan, bukan setelah jadi barang.</p>
+      </div>
+    </div>
+    <div class="reason-row fade-up">
+      <div class="reason-index">02</div>
+      <div class="reason-content">
+        <h3>Sample Tersedia Sebelum Produksi Massal</h3>
+        <p>Order sample dulu sebelum commit ke jumlah besar. Pegang dulu barangnya, rasakan bahannya, lihat hasil sablonnya — kalau puas, baru lanjut produksi penuh.</p>
+      </div>
+    </div>
+    <div class="reason-row fade-up">
+      <div class="reason-index">03</div>
+      <div class="reason-content">
+        <h3>Pengiriman Tepat Waktu Sesuai Deadline</h3>
+        <p>Deadline event kamu adalah tanggung jawab kami. Jadwal produksi diatur ketat agar barang sampai sebelum acara, bukan pas hari H — atau lebih buruk, sesudahnya.</p>
+      </div>
+    </div>
+    <div class="reason-row fade-up">
+      <div class="reason-index">04</div>
+      <div class="reason-content">
+        <h3>Revisi Tanpa Drama Selama Proses</h3>
+        <p>Selama belum masuk tahap cutting, perubahan kecil bisa ditampung tanpa biaya tambahan. Komunikasi terbuka, tidak ada kerjasama yang kaku dan menyulitkan klien.</p>
+      </div>
+    </div>
+    <div class="reason-row fade-up">
+      <div class="reason-index">05</div>
+      <div class="reason-content">
+        <h3>Pengalaman 6+ Tahun di Industri Garmen</h3>
+        <p>Bukan vendor kemarin sore. Sudah ratusan klien — dari komunitas kampus, brand lokal, perusahaan nasional, sampai organizer event — yang percayakan produksinya ke OnlyVendor.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="testi-header fade-up">
+    <span class="section-tag">Kata Mereka</span>
+    <h2>Bukan Kami yang Bilang</h2>
+  </div>
+  <div class="testi-grid fade-up">
+    <div class="testi-card featured">
+      <div class="testi-stars">★ ★ ★ ★ ★</div>
+      <p class="testi-quote">"Sudah coba beberapa vendor sebelumnya, hasilnya selalu ada yang kurang. Pas coba OnlyVendor, langsung beda. Sablon rata, warna sesuai, dan yang paling penting — selesai 2 hari sebelum deadline event kami. Tidak ada drama, tidak ada revisi mendadak. Langsung repeat order untuk batch kedua."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">RH</div>
+        <div>
+          <div class="testi-name">Raka Hermawan</div>
+          <div class="testi-role">Ketua Panitia — Festival Kampus UGM</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★ ★ ★ ★ ★</div>
+      <p class="testi-quote">"Order 200 pcs untuk merch brand saya. Semuanya rapi, konsisten, dan dikemas dengan baik. Tim mereka responsif banget waktu ada perubahan kecil di file desain."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">SA</div>
+        <div>
+          <div class="testi-name">Sinta Andriani</div>
+          <div class="testi-role">Founder — Sinta Wear</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★ ★ ★ ★ ★</div>
+      <p class="testi-quote">"Harga masuk akal, kualitas tidak mengecewakan. Sudah 4x order di sini. Cocok banget untuk kaos seragam komunitas kami yang butuh konsistensi."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">DK</div>
+        <div>
+          <div class="testi-name">Dimas Kurniawan</div>
+          <div class="testi-role">Koordinator — Komunitas Motor Bandung</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- URGENCY -->
+<section class="urgency">
+  <span class="section-tag" style="color:rgba(255,255,255,0.6)">Penawaran Terbatas</span>
+  <h2>Slot Produksi<br>Bulan Ini Hampir Penuh</h2>
+  <p>Kami batasi jumlah order per bulan untuk menjaga kualitas. Kalau kamu butuh kaos dalam waktu dekat, jangan tunda — slot bisa habis kapan saja.</p>
+  <div class="countdown-strip">
+    <div class="count-box"><strong id="cd-d">07</strong><small>Hari</small></div>
+    <div class="count-sep">:</div>
+    <div class="count-box"><strong id="cd-h">14</strong><small>Jam</small></div>
+    <div class="count-sep">:</div>
+    <div class="count-box"><strong id="cd-m">32</strong><small>Menit</small></div>
+    <div class="count-sep">:</div>
+    <div class="count-box"><strong id="cd-s">09</strong><small>Detik</small></div>
+  </div>
+  <a href="#cta" class="btn-light">Amankan Slot Saya Sekarang</a>
+</section>
+
+<!-- BONUS -->
+<section class="bonus">
+  <div class="bonus-header fade-up">
+    <span class="section-tag" style="color:var(--sand)">Spesial Order Sekarang</span>
+    <h2>Bonus <span>Eksklusif</span><br>Untuk Kamu</h2>
+  </div>
+  <div class="bonus-grid fade-up">
+    <div class="bonus-item">
+      <div class="bonus-icon">Bonus 01</div>
+      <div class="bonus-tag">Gratis</div>
+      <h3>Konsultasi Desain Prioritas</h3>
+      <p>Tim desain kami review file kamu dalam 24 jam kerja — gratis, tanpa biaya tambahan. Termasuk saran teknis sablon agar hasil lebih optimal.</p>
+    </div>
+    <div class="bonus-item">
+      <div class="bonus-icon">Bonus 02</div>
+      <div class="bonus-tag">Gratis</div>
+      <h3>Custom Label Woven atau Neck Tag</h3>
+      <p>Tambahkan identitas brand kamu di kaos tanpa biaya extra untuk order minimal 50 pcs. Bisa neck tag, label jahit, atau hangtag sederhana.</p>
+    </div>
+    <div class="bonus-item">
+      <div class="bonus-icon">Bonus 03</div>
+      <div class="bonus-tag">Gratis</div>
+      <h3>Packing OPP + Sticker Branded</h3>
+      <p>Setiap kaos dikemas rapi per piece dengan plastik OPP bersih. Untuk brand yang ingin presentasi produk lebih profesional, ini sudah termasuk.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <div class="cta-left fade-up">
+    <h2>Mulai<br>Produksi<br><em>Hari Ini</em></h2>
+    <p>Isi form di samping, tim kami akan hubungi kamu dalam 1x24 jam untuk konfirmasi detail, kirim penawaran harga, dan jadwalkan produksi.</p>
+    <div class="price-block">
+      <div class="price-old">Mulai dari Rp 45.000/pcs</div>
+      <div class="price-new">Rp 38.000 <small>/ pcs</small></div>
+      <small style="color:var(--steel);font-size:13px;">*Harga tergantung bahan, teknik sablon, dan jumlah order</small>
+    </div>
+    <a href="#cta" class="btn-primary">Konsultasi Gratis Dulu</a>
+  </div>
+  <div class="cta-form fade-up">
+    <div class="form-group">
+      <label>Nama Lengkap</label>
+      <input type="text" placeholder="Nama kamu atau nama brand">
+    </div>
+    <div class="form-group">
+      <label>Nomor WhatsApp</label>
+      <input type="tel" placeholder="08xxxxxxxxxx">
+    </div>
+    <div class="form-group">
+      <label>Jumlah Order</label>
+      <select>
+        <option>12 - 50 pcs</option>
+        <option>51 - 100 pcs</option>
+        <option>101 - 300 pcs</option>
+        <option>300+ pcs</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Keperluan</label>
+      <select>
+        <option>Seragam komunitas/organisasi</option>
+        <option>Merch brand / usaha</option>
+        <option>Event / acara</option>
+        <option>Lainnya</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Catatan Tambahan (opsional)</label>
+      <textarea placeholder="Ceritakan kebutuhan kamu secara singkat..."></textarea>
+    </div>
+    <button class="btn-full">Kirim Permintaan Sekarang</button>
+    <p style="text-align:center;font-size:12px;color:var(--steel);margin-top:8px;letter-spacing:1px;">Tidak ada spam. Data kamu aman bersama kami.</p>
+  </div>
+</section>
+
+<!-- GUARANTEE -->
+<section class="guarantee fade-up">
+  <div class="guarantee-inner">
+    <div class="guarantee-seal">
+      <strong>100%</strong>
+      <span>Jaminan<br>Kualitas</span>
+    </div>
+    <div class="guarantee-content">
+      <h2>Garansi Tanpa Syarat Berbelit</h2>
+      <p>Kalau barang yang kamu terima tidak sesuai dengan yang disepakati — baik itu kualitas sablon, ukuran, atau bahan — kami siap produksi ulang tanpa biaya tambahan. Tidak perlu argumen panjang, tidak perlu negosiasi. Ini komitmen kami kepada setiap klien OnlyVendor.</p>
+    </div>
+  </div>
+</section>
+
+<!-- NB -->
+<section class="nb-section">
+  <div class="nb-inner">
+    <div class="nb-title">NB — Harap Dibaca Sebelum Order</div>
+    <ul class="nb-list">
+      <li>Harga yang tertera adalah estimasi awal. Harga final dikonfirmasi setelah konsultasi dan detail order diterima tim kami.</li>
+      <li>Minimal order berlaku 12 pcs per desain per warna. Order di bawah jumlah minimal belum bisa kami proses.</li>
+      <li>Waktu produksi 7-14 hari kerja dihitung sejak file desain disetujui dan DP diterima. Deadline mepet harap dikomunikasikan lebih awal.</li>
+      <li>File desain diterima dalam format AI, CDR, atau PNG resolusi tinggi (min. 300 dpi). File dari WhatsApp atau screenshot tidak bisa langsung diproses.</li>
+      <li>DP sebesar 50% diperlukan untuk memulai produksi. Sisa pembayaran dilunasi sebelum barang dikirim.</li>
+      <li>Revisi setelah cutting tidak dapat ditampung. Pastikan semua detail sudah final sebelum proses produksi dimulai.</li>
+      <li>Bonus berlaku untuk order yang masuk dalam periode promo dan memenuhi syarat minimum.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Only<span>Vendor</span></div>
+  <p>2025 OnlyVendor. Vendor Kaos & Sablon Terpercaya.</p>
+</footer>
+
+<script>
+  // SCROLL FADE IN
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // COUNTDOWN
+  function updateCountdown() {
+    const target = new Date();
+    target.setDate(target.getDate() + 7);
+    target.setHours(23, 59, 59, 0);
+
+    const now = new Date();
+    const diff = target - now;
+
+    if (diff <= 0) return;
+
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+    document.getElementById('cd-d').textContent = String(d).padStart(2, '0');
+    document.getElementById('cd-h').textContent = String(h).padStart(2, '0');
+    document.getElementById('cd-m').textContent = String(m).padStart(2, '0');
+    document.getElementById('cd-s').textContent = String(s).padStart(2, '0');
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // FORM SUBMIT
+  document.querySelector('.btn-full').addEventListener('click', function() {
+    const name = document.querySelector('input[type="text"]').value;
+    const phone = document.querySelector('input[type="tel"]').value;
+    if (!name || !phone) {
+      alert('Mohon lengkapi nama dan nomor WhatsApp kamu.');
+      return;
+    }
+    this.textContent = 'Terkirim! Tim Kami Akan Segera Menghubungi.';
+    this.style.background = '#1a3a2a';
+    this.disabled = true;
+  });
+</script>
+</body>
+</html>
