@@ -1,1412 +1,1546 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OnlyVendor — Kaos & Sablon Premium</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --ink: #0d0d0d;
-    --cream: #f5f0e8;
-    --rust: #c94a2b;
-    --sand: #e8d5b0;
-    --steel: #8a8a8a;
-    --paper: #faf7f2;
-    --accent: #1a3a2a;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    overflow-x: hidden;
-  }
-
-  /* NOISE TEXTURE OVERLAY */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.4;
-  }
-
-  /* TOPBAR */
-  .topbar {
-    background: var(--ink);
-    color: var(--cream);
-    text-align: center;
-    padding: 10px;
-    font-size: 12px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    font-weight: 500;
-  }
-
-  /* NAV */
-  nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 60px;
-    border-bottom: 2px solid var(--ink);
-    background: var(--paper);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-
-  .nav-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    letter-spacing: 4px;
-    color: var(--ink);
-  }
-
-  .nav-logo span { color: var(--rust); }
-
-  .nav-tag {
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--steel);
-    border: 1px solid var(--steel);
-    padding: 6px 14px;
-  }
-
-  /* HERO */
-  .hero {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    min-height: 90vh;
-    border-bottom: 2px solid var(--ink);
-  }
-
-  .hero-left {
-    padding: 80px 60px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-right: 2px solid var(--ink);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero-label {
-    font-size: 11px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--rust);
-    margin-bottom: 30px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .hero-label::before {
-    content: '';
-    width: 40px;
-    height: 1px;
-    background: var(--rust);
-  }
-
-  .hero-headline {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(72px, 8vw, 120px);
-    line-height: 0.9;
-    letter-spacing: 2px;
-    color: var(--ink);
-    margin-bottom: 40px;
-  }
-
-  .hero-headline em {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    color: var(--rust);
-    display: block;
-  }
-
-  .hero-sub {
-    font-size: 16px;
-    line-height: 1.8;
-    color: var(--steel);
-    max-width: 420px;
-    margin-bottom: 50px;
-  }
-
-  .hero-cta-group {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-  }
-
-  .btn-primary {
-    background: var(--ink);
-    color: var(--cream);
-    padding: 18px 40px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    font-weight: 500;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.3s;
-    position: relative;
-  }
-
-  .btn-primary::after {
-    content: '';
-    position: absolute;
-    inset: 4px -4px -4px 4px;
-    border: 2px solid var(--rust);
-    z-index: -1;
-    transition: all 0.3s;
-  }
-
-  .btn-primary:hover {
-    background: var(--rust);
-    transform: translate(-2px, -2px);
-  }
-
-  .btn-primary:hover::after {
-    transform: translate(2px, 2px);
-  }
-
-  .hero-note {
-    font-size: 12px;
-    color: var(--steel);
-    letter-spacing: 1px;
-  }
-
-  .hero-right {
-    background: var(--sand);
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-
-  .hero-img-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    color: var(--steel);
-  }
-
-  .hero-img-placeholder img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  .hero-img-placeholder .ph-text {
-    font-size: 12px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    text-align: center;
-    padding: 40px;
-  }
-
-  .hero-badge {
-    position: absolute;
-    bottom: 40px;
-    right: 40px;
-    width: 110px;
-    height: 110px;
-    background: var(--rust);
-    color: var(--cream);
-    border-radius: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    animation: spin-slow 12s linear infinite;
-  }
-
-  .hero-badge span:first-child {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    line-height: 1;
-  }
-
-  .hero-badge span:last-child {
-    font-size: 9px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-
-  @keyframes spin-slow {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-
-  .hero-stat-strip {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: var(--ink);
-    color: var(--cream);
-    display: flex;
-    justify-content: space-around;
-    padding: 14px 40px;
-  }
-
-  .hero-stat { text-align: center; }
-  .hero-stat strong {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    color: var(--rust);
-    display: block;
-  }
-  .hero-stat small { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--sand); }
-
-  /* OPENING */
-  .opening {
-    padding: 100px 60px;
-    max-width: 1000px;
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  .section-tag {
-    font-size: 11px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--rust);
-    margin-bottom: 24px;
-    display: block;
-  }
-
-  .opening h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(32px, 4vw, 52px);
-    line-height: 1.3;
-    margin-bottom: 30px;
-    color: var(--ink);
-  }
-
-  .opening p {
-    font-size: 17px;
-    line-height: 1.9;
-    color: var(--steel);
-    max-width: 700px;
-    margin: 0 auto;
-  }
-
-  /* DIVIDER */
-  .divider {
-    height: 2px;
-    background: var(--ink);
-    margin: 0 60px;
-    position: relative;
-  }
-
-  .divider::after {
-    content: 'x';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--paper);
-    padding: 0 20px;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 20px;
-    color: var(--rust);
-  }
-
-  /* BENEFITS */
-  .benefits {
-    padding: 100px 60px;
-    background: var(--ink);
-    color: var(--cream);
-  }
-
-  .benefits-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 70px;
-    border-bottom: 1px solid #333;
-    padding-bottom: 40px;
-  }
-
-  .benefits-header h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 6vw, 80px);
-    line-height: 0.95;
-    letter-spacing: 2px;
-  }
-
-  .benefits-header h2 em {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    color: var(--rust);
-    display: block;
-  }
-
-  .benefits-header p {
-    max-width: 300px;
-    font-size: 14px;
-    line-height: 1.8;
-    color: #aaa;
-    text-align: right;
-  }
-
-  .benefits-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0;
-  }
-
-  .benefit-item {
-    padding: 50px 40px;
-    border: 1px solid #222;
-    position: relative;
-    transition: background 0.3s;
-  }
-
-  .benefit-item:hover { background: #181818; }
-
-  .benefit-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 80px;
-    color: #1e1e1e;
-    line-height: 1;
-    margin-bottom: 20px;
-    transition: color 0.3s;
-  }
-
-  .benefit-item:hover .benefit-num { color: var(--rust); opacity: 0.4; }
-
-  .benefit-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 26px;
-    letter-spacing: 2px;
-    margin-bottom: 16px;
-    color: var(--cream);
-  }
-
-  .benefit-desc {
-    font-size: 14px;
-    line-height: 1.8;
-    color: #888;
-  }
-
-  /* WHY / REASONS */
-  .reasons {
-    padding: 100px 60px;
-  }
-
-  .reasons-intro {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    margin-bottom: 80px;
-    align-items: center;
-  }
-
-  .reasons-intro h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 6vw, 80px);
-    line-height: 0.95;
-    letter-spacing: 2px;
-  }
-
-  .reasons-intro h2 em {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    color: var(--rust);
-    display: block;
-    font-size: 0.7em;
-  }
-
-  .reasons-intro p {
-    font-size: 16px;
-    line-height: 1.9;
-    color: var(--steel);
-  }
-
-  .reasons-list { display: flex; flex-direction: column; gap: 0; }
-
-  .reason-row {
-    display: grid;
-    grid-template-columns: 80px 1fr;
-    gap: 40px;
-    padding: 40px 0;
-    border-top: 1px solid #ddd;
-    align-items: start;
-    transition: all 0.3s;
-  }
-
-  .reason-row:last-child { border-bottom: 1px solid #ddd; }
-
-  .reason-row:hover { padding-left: 20px; }
-
-  .reason-index {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 48px;
-    color: var(--sand);
-    line-height: 1;
-  }
-
-  .reason-content h3 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 24px;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
-  }
-
-  .reason-content p {
-    font-size: 15px;
-    line-height: 1.8;
-    color: var(--steel);
-  }
-
-  /* TESTIMONIALS */
-  .testimonials {
-    background: var(--cream);
-    padding: 100px 60px;
-    border-top: 2px solid var(--ink);
-    border-bottom: 2px solid var(--ink);
-  }
-
-  .testi-header {
-    text-align: center;
-    margin-bottom: 70px;
-  }
-
-  .testi-header h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 6vw, 80px);
-    letter-spacing: 3px;
-  }
-
-  .testi-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 20px;
-  }
-
-  .testi-card {
-    background: var(--paper);
-    border: 2px solid var(--ink);
-    padding: 40px;
-    position: relative;
-    transition: transform 0.3s;
-  }
-
-  .testi-card:hover { transform: translate(-4px, -4px); box-shadow: 4px 4px 0 var(--ink); }
-
-  .testi-card.featured {
-    background: var(--ink);
-    color: var(--cream);
-  }
-
-  .testi-quote {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: 17px;
-    line-height: 1.7;
-    margin-bottom: 30px;
-  }
-
-  .testi-card.featured .testi-quote { font-size: 21px; }
-
-  .testi-author {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    border-top: 1px solid #ddd;
-    padding-top: 20px;
-  }
-
-  .testi-card.featured .testi-author { border-top-color: #333; }
-
-  .testi-avatar {
-    width: 44px;
-    height: 44px;
-    background: var(--sand);
-    border-radius: 50%;
-    flex-shrink: 0;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px;
-    color: var(--ink);
-  }
-
-  .testi-card.featured .testi-avatar { background: var(--rust); color: var(--cream); }
-
-  .testi-name {
-    font-weight: 500;
-    font-size: 14px;
-    letter-spacing: 1px;
-  }
-
-  .testi-role {
-    font-size: 12px;
-    color: var(--steel);
-    letter-spacing: 1px;
-  }
-
-  .testi-card.featured .testi-role { color: #888; }
-
-  .testi-stars {
-    color: var(--rust);
-    font-size: 14px;
-    letter-spacing: 2px;
-    margin-bottom: 16px;
-    font-family: 'Bebas Neue', sans-serif;
-  }
-
-  /* URGENCY */
-  .urgency {
-    padding: 100px 60px;
-    background: var(--rust);
-    color: var(--cream);
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .urgency::before {
-    content: 'NOW';
-    position: absolute;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 400px;
-    color: rgba(255,255,255,0.04);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    letter-spacing: 20px;
-  }
-
-  .urgency h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 7vw, 90px);
-    letter-spacing: 4px;
-    line-height: 1;
-    margin-bottom: 24px;
-  }
-
-  .urgency p {
-    font-size: 18px;
-    line-height: 1.7;
-    max-width: 600px;
-    margin: 0 auto 50px;
-    opacity: 0.85;
-  }
-
-  .countdown-strip {
-    display: flex;
-    justify-content: center;
-    gap: 0;
-    margin-bottom: 50px;
-  }
-
-  .count-box {
-    background: rgba(0,0,0,0.25);
-    padding: 20px 30px;
-    border: 1px solid rgba(255,255,255,0.2);
-    text-align: center;
-    min-width: 90px;
-  }
-
-  .count-box strong {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 52px;
-    display: block;
-    line-height: 1;
-  }
-
-  .count-box small {
-    font-size: 10px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    opacity: 0.7;
-  }
-
-  .count-sep {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 52px;
-    line-height: 1;
-    padding: 20px 10px;
-    opacity: 0.5;
-  }
-
-  .btn-light {
-    background: var(--cream);
-    color: var(--ink);
-    padding: 18px 50px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    font-weight: 500;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.3s;
-  }
-
-  .btn-light:hover { background: var(--ink); color: var(--cream); }
-
-  /* BONUS */
-  .bonus {
-    padding: 100px 60px;
-    background: var(--accent);
-    color: var(--cream);
-  }
-
-  .bonus-header {
-    margin-bottom: 60px;
-  }
-
-  .bonus-header h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 6vw, 80px);
-    letter-spacing: 3px;
-  }
-
-  .bonus-header h2 span { color: var(--rust); }
-
-  .bonus-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    background: #112;
-  }
-
-  .bonus-item {
-    background: var(--accent);
-    padding: 40px 36px;
-    position: relative;
-    transition: background 0.3s;
-  }
-
-  .bonus-item:hover { background: #1e4a34; }
-
-  .bonus-icon {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 14px;
-    letter-spacing: 3px;
-    color: var(--rust);
-    margin-bottom: 20px;
-    text-transform: uppercase;
-  }
-
-  .bonus-item h3 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 24px;
-    letter-spacing: 2px;
-    margin-bottom: 14px;
-  }
-
-  .bonus-item p {
-    font-size: 14px;
-    line-height: 1.8;
-    color: #9bb;
-  }
-
-  .bonus-tag {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: var(--rust);
-    color: var(--cream);
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 4px 10px;
-  }
-
-  /* CTA SECTION */
-  .cta-section {
-    padding: 120px 60px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: center;
-    border-top: 2px solid var(--ink);
-    border-bottom: 2px solid var(--ink);
-  }
-
-  .cta-left h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(52px, 7vw, 100px);
-    line-height: 0.9;
-    letter-spacing: 3px;
-    margin-bottom: 30px;
-  }
-
-  .cta-left h2 em {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    color: var(--rust);
-    display: block;
-    font-size: 0.65em;
-    letter-spacing: 1px;
-  }
-
-  .cta-left p {
-    font-size: 16px;
-    line-height: 1.9;
-    color: var(--steel);
-    margin-bottom: 40px;
-  }
-
-  .price-block {
-    margin-bottom: 40px;
-  }
-
-  .price-old {
-    font-size: 20px;
-    color: var(--steel);
-    text-decoration: line-through;
-    margin-bottom: 8px;
-  }
-
-  .price-new {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 64px;
-    letter-spacing: 3px;
-    line-height: 1;
-    color: var(--rust);
-  }
-
-  .price-new small {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
-    color: var(--steel);
-    letter-spacing: 1px;
-  }
-
-  .cta-form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    background: var(--cream);
-    padding: 50px;
-    border: 2px solid var(--ink);
-    position: relative;
-  }
-
-  .cta-form::before {
-    content: 'PESAN SEKARANG';
-    position: absolute;
-    top: -14px;
-    left: 30px;
-    background: var(--ink);
-    color: var(--cream);
-    padding: 4px 16px;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 14px;
-    letter-spacing: 3px;
-  }
-
-  .form-group { display: flex; flex-direction: column; gap: 8px; }
-
-  .form-group label {
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    font-weight: 500;
-  }
-
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    background: var(--paper);
-    border: 1.5px solid #ccc;
-    padding: 14px 18px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    color: var(--ink);
-    outline: none;
-    transition: border-color 0.3s;
-    width: 100%;
-  }
-
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus {
-    border-color: var(--rust);
-  }
-
-  .form-group textarea { resize: vertical; min-height: 100px; }
-
-  .btn-full {
-    background: var(--rust);
-    color: var(--cream);
-    padding: 18px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    font-weight: 500;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    transition: all 0.3s;
-  }
-
-  .btn-full:hover { background: var(--ink); }
-
-  /* GUARANTEE */
-  .guarantee {
-    padding: 80px 60px;
-    background: var(--sand);
-    border-bottom: 2px solid var(--ink);
-  }
-
-  .guarantee-inner {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 60px;
-    align-items: center;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-  .guarantee-seal {
-    width: 160px;
-    height: 160px;
-    border: 4px solid var(--ink);
-    border-radius: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    flex-shrink: 0;
-    position: relative;
-  }
-
-  .guarantee-seal::before {
-    content: '';
-    position: absolute;
-    inset: 8px;
-    border: 2px dashed var(--ink);
-    border-radius: 50%;
-  }
-
-  .guarantee-seal strong {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 42px;
-    color: var(--rust);
-    line-height: 1;
-  }
-
-  .guarantee-seal span {
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    font-weight: 500;
-  }
-
-  .guarantee-content h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 38px;
-    letter-spacing: 3px;
-    margin-bottom: 16px;
-  }
-
-  .guarantee-content p {
-    font-size: 15px;
-    line-height: 1.9;
-    color: var(--steel);
-  }
-
-  /* NB */
-  .nb-section {
-    padding: 60px;
-    background: var(--ink);
-    color: var(--cream);
-  }
-
-  .nb-inner {
-    max-width: 900px;
-    margin: 0 auto;
-    border: 1px solid #333;
-    padding: 40px;
-  }
-
-  .nb-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    letter-spacing: 4px;
-    color: var(--rust);
-    margin-bottom: 24px;
-    border-bottom: 1px solid #333;
-    padding-bottom: 16px;
-  }
-
-  .nb-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .nb-list li {
-    font-size: 14px;
-    line-height: 1.7;
-    color: #aaa;
-    padding-left: 24px;
-    position: relative;
-  }
-
-  .nb-list li::before {
-    content: '—';
-    position: absolute;
-    left: 0;
-    color: var(--rust);
-  }
-
-  /* FOOTER */
-  footer {
-    background: var(--ink);
-    color: #555;
-    padding: 40px 60px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid #222;
-  }
-
-  .footer-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    letter-spacing: 4px;
-    color: var(--cream);
-  }
-
-  .footer-logo span { color: var(--rust); }
-
-  footer p { font-size: 12px; letter-spacing: 1px; }
-
-  /* SCROLL ANIMATIONS */
-  .fade-up {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-
-  .fade-up.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 1024px) {
-    nav { padding: 16px 30px; }
-    .hero { grid-template-columns: 1fr; min-height: auto; }
-    .hero-left { padding: 60px 30px; border-right: none; border-bottom: 2px solid var(--ink); }
-    .hero-right { min-height: 400px; }
-    .benefits { padding: 70px 30px; }
-    .benefits-header { flex-direction: column; align-items: flex-start; gap: 20px; }
-    .benefits-header p { text-align: left; }
-    .benefits-grid { grid-template-columns: 1fr; }
-    .reasons { padding: 70px 30px; }
-    .reasons-intro { grid-template-columns: 1fr; gap: 30px; }
-    .testimonials { padding: 70px 30px; }
-    .testi-grid { grid-template-columns: 1fr; }
-    .urgency { padding: 70px 30px; }
-    .bonus { padding: 70px 30px; }
-    .bonus-grid { grid-template-columns: 1fr; }
-    .cta-section { grid-template-columns: 1fr; padding: 70px 30px; gap: 50px; }
-    .guarantee { padding: 60px 30px; }
-    .guarantee-inner { grid-template-columns: 1fr; text-align: center; justify-items: center; }
-    .nb-section { padding: 40px 30px; }
-    footer { padding: 30px; flex-direction: column; gap: 12px; text-align: center; }
-    .opening { padding: 70px 30px; }
-    .divider { margin: 0 30px; }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Only Vendor | Konveksi & Sablon Kaos Custom</title>
+    
+    <!-- 
+    ================================================================
+    INSTRUKSI PENGCARIAN ASET OTOMATIS (AUTO-ASSET SEARCH INSTRUCTION)
+    ================================================================
+    Code generator berikutnya HARUS mencari dan menggunakan link 
+    gambar eksternal yang VALID dari Unsplash atau Pexels dengan 
+    kata kunci berikut:
+    
+    1. "streetwear oversized t-shirt mockup"
+       → Digunakan pada: Hero section, Kartu Oversized Cutting
+    2. "boxy fit shirt"  
+       → Digunakan pada: Kartu Boxy Fit Cutting
+    3. "screen printing workshop"
+       → Digunakan pada: Section Opening, Background Workshop
+    
+    Aset yang digunakan saat ini bersumber dari Unsplash.
+    Ganti URL gambar di bawah jika ada yang tidak valid.
+    ================================================================
+    -->
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            /* ===== WARNA UTAMA (ACCENT) ===== */
+            /* Ubah warna aksen di sini untuk mengubah tema keseluruhan */
+            --accent: #FF5500;           /* Electric Orange */
+            --accent-hover: #E64D00;     /* Orange lebih gelap untuk hover */
+            --volt: #CCFF00;             /* Volt Green - aksen sekunder */
+            --black: #121212;            /* Hitam Asphalt - Background utama */
+            --black-light: #1A1A1A;      /* Hitam lebih terang - Card bg */
+            --black-card: #1E1E1E;       /* Hitam card */
+            --gray-dark: #2A2A2A;        /* Abu gelap - Border */
+            --gray-mid: #888888;         /* Abu tengah - Text secondary */
+            --gray-light: #B3B3B3;       /* Abu terang */
+            --white: #FFFFFF;            /* Putih Bersih - Text utama */
+            --white-off: #F0F0F0;        /* Putih off */
+            
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            
+            --container: 1200px;
+            --radius: 8px;
+            --radius-lg: 16px;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background-color: var(--black);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        img {
+            display: block;
+            max-width: 100%;
+        }
+        
+        /* ===== UTILITY ===== */
+        .container {
+            max-width: var(--container);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        .section-label {
+            font-family: var(--font-heading);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+        
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: clamp(28px, 5vw, 48px);
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--white);
+            margin-bottom: 20px;
+        }
+        
+        .section-desc {
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--gray-light);
+            max-width: 600px;
+        }
+        
+        /* Fade-up animation */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* ===== NAVIGATION ===== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 20px 0;
+            transition: background-color 0.3s ease, padding 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .nav.scrolled {
+            background-color: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 12px 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+        }
+        
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: var(--container);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        .nav-logo {
+            font-family: var(--font-heading);
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .nav-logo span {
+            color: var(--accent);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            color: var(--gray-light);
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+        
+        /* Hamburger */
+        .nav-hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+        
+        .nav-hamburger span {
+            width: 24px;
+            height: 2px;
+            background: var(--white);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        
+        .nav-hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        
+        .nav-hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .nav-hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+        
+        /* Mobile menu */
+        .nav-mobile {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--black);
+            z-index: 999;
+            padding: 100px 24px 40px;
+        }
+        
+        .nav-mobile.open {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .nav-mobile a {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--white);
+            transition: color 0.3s ease;
+        }
+        
+        .nav-mobile a:hover {
+            color: var(--accent);
+        }
+        
+        /* ===== HERO SECTION ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 120px 0 80px;
+        }
+        
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 55%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        .hero-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.4) contrast(1.1);
+        }
+        
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, var(--black) 0%, rgba(18,18,18,0.6) 50%, rgba(18,18,18,0.3) 100%);
+        }
+        
+        .hero .container {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-content {
+            max-width: 650px;
+        }
+        
+        .hero-tag {
+            display: inline-block;
+            font-family: var(--font-heading);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 8px 16px;
+            margin-bottom: 32px;
+        }
+        
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(36px, 6vw, 64px);
+            font-weight: 700;
+            line-height: 1.05;
+            margin-bottom: 24px;
+        }
+        
+        .hero h1 .accent {
+            color: var(--accent);
+        }
+        
+        .hero-desc {
+            font-size: 18px;
+            line-height: 1.7;
+            color: var(--gray-light);
+            margin-bottom: 40px;
+            max-width: 500px;
+        }
+        
+        /* ===== CTA BUTTON - TOMBOL UTAMA ===== */
+        /* Kustomisasi warna tombol CTA di sini */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-heading);
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: var(--white);
+            background-color: var(--accent); /* Warna background tombol */
+            padding: 16px 32px;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent-hover); /* Warna hover tombol */
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 85, 0, 0.3);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-heading);
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: var(--white);
+            background-color: transparent;
+            padding: 16px 32px;
+            border: 1px solid var(--gray-dark);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: border-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        
+        /* ===== OPENING SECTION ===== */
+        .opening {
+            padding: 100px 0;
+            border-top: 1px solid var(--gray-dark);
+        }
+        
+        .opening-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        
+        .opening-image {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            aspect-ratio: 4/3;
+        }
+        
+        .opening-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.8) contrast(1.1);
+        }
+        
+        .opening-image-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(18,18,18,0.8);
+            backdrop-filter: blur(8px);
+            padding: 12px 20px;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-dark);
+        }
+        
+        .opening-image-overlay span {
+            font-family: var(--font-heading);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--volt);
+        }
+        
+        /* ===== BENEFIT / CUTTING SECTION ===== */
+        .benefit {
+            padding: 100px 0;
+            border-top: 1px solid var(--gray-dark);
+        }
+        
+        .benefit-header {
+            margin-bottom: 60px;
+        }
+        
+        /* ===== LAYOUT GRID ASIMETRIS UNTUK KARTU CUTTING ===== */
+        /* Grid ini menggunakan pola asimetris untuk kesan editorial streetwear */
+        .cutting-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 20px;
+        }
+        
+        /* Kartu Oversized menempati 2 baris untuk efek asimetris */
+        .cutting-grid .card:nth-child(2) {
+            grid-row: span 2;
+        }
+        
+        .cutting-card {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: var(--black-card);
+            border: 1px solid var(--gray-dark);
+            cursor: pointer;
+        }
+        
+        /* ===== EFEK HOVER ZOOM HALUS PADA KARTU CUTTING ===== */
+        .cutting-card .card-img {
+            width: 100%;
+            height: 100%;
+            min-height: 300px;
+            overflow: hidden;
+        }
+        
+        .cutting-card .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.6) contrast(1.1);
+            transition: transform 0.6s ease, filter 0.6s ease;
+        }
+        
+        .cutting-card:hover .card-img img {
+            transform: scale(1.08);
+            filter: brightness(0.8) contrast(1.1);
+        }
+        
+        .cutting-card .card-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 24px;
+            background: linear-gradient(to top, rgba(18,18,18,0.95) 0%, transparent 100%);
+        }
+        
+        .cutting-card .card-title {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .cutting-card .card-subtitle {
+            font-size: 13px;
+            color: var(--gray-mid);
+        }
+        
+        .cutting-card .card-tag {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--accent);
+            background: rgba(255, 85, 0, 0.15);
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+        
+        /* Size range section */
+        .size-range {
+            margin-top: 40px;
+            background: var(--black-light);
+            border: 1px solid var(--gray-dark);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .size-range-text h3 {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .size-range-text p {
+            font-size: 14px;
+            color: var(--gray-mid);
+        }
+        
+        .size-pills {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .size-pill {
+            font-family: var(--font-heading);
+            font-size: 13px;
+            font-weight: 600;
+            padding: 8px 16px;
+            border: 1px solid var(--gray-dark);
+            border-radius: 6px;
+            color: var(--gray-light);
+            transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .size-pill:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(255, 85, 0, 0.08);
+        }
+        
+        /* ===== WHY US SECTION ===== */
+        .why-us {
+            padding: 100px 0;
+            border-top: 1px solid var(--gray-dark);
+        }
+        
+        .why-us-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .why-us-header .section-desc {
+            margin: 0 auto;
+        }
+        
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        
+        .why-card {
+            background: var(--black-light);
+            border: 1px solid var(--gray-dark);
+            border-radius: var(--radius-lg);
+            padding: 32px 24px;
+            transition: border-color 0.3s ease, transform 0.3s ease;
+        }
+        
+        .why-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+        
+        .why-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: rgba(255, 85, 0, 0.1);
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: var(--accent);
+        }
+        
+        .why-card h3 {
+            font-family: var(--font-heading);
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .why-card p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--gray-mid);
+        }
+        
+        /* ===== TESTIMONIALS SECTION ===== */
+        .testimonials {
+            padding: 100px 0;
+            border-top: 1px solid var(--gray-dark);
+        }
+        
+        .testimonials-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .testimonials-header .section-desc {
+            margin: 0 auto;
+        }
+        
+        .testi-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .testi-card {
+            background: var(--black-light);
+            border: 1px solid var(--gray-dark);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .testi-card:hover {
+            border-color: var(--gray-light);
+        }
+        
+        .testi-stars {
+            color: var(--accent);
+            font-size: 14px;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+        }
+        
+        .testi-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--gray-light);
+            margin-bottom: 24px;
+            font-style: italic;
+        }
+        
+        .testi-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .testi-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gray-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .testi-name {
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .testi-role {
+            font-size: 12px;
+            color: var(--gray-mid);
+        }
+        
+        /* ===== URGENCY SECTION ===== */
+        .urgency {
+            padding: 100px 0;
+            border-top: 1px solid var(--gray-dark);
+        }
+        
+        .urgency-box {
+            background: linear-gradient(135deg, var(--black-light) 0%, rgba(255,85,0,0.08) 100%);
+            border: 1px solid var(--accent);
+            border-radius: var(--radius-lg);
+            padding: 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .urgency-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: rgba(255, 85, 0, 0.05);
+            filter: blur(80px);
+        }
+        
+        .urgency-box .section-title {
+            margin-bottom: 12px;
+        }
+        
+        .urgency-desc {
+            font-size: 16px;
+            color: var(--gray-light);
+            max-width: 500px;
+            margin: 0 auto 32px;
+            line-height: 1.7;
+        }
+        
+        .urgency-badge {
+            display: inline-block;
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--black);
+            background: var(--volt);
+            padding: 8px 20px;
+            border-radius: 6px;
+            margin-bottom: 32px;
+        }
+        
+        /* ===== BONUS SECTION ===== */
+        .bonus {
+            padding: 100px 0;
+            border-top: 1px solid var(--gray-dark);
+        }
+        
+        .bonus-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        
+        .bonus-content .section-title {
+            margin-bottom: 16px;
+        }
+        
+        .bonus-content p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--gray-light);
+            margin-bottom: 24px;
+        }
+        
+        .bonus-highlight {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--black-light);
+            border: 1px solid var(--volt);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+        }
+        
+        .bonus-highlight-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: rgba(204, 255, 0, 0.15);
+            font-size: 18px;
+            color: var(--volt);
+            flex-shrink: 0;
+        }
+        
+        .bonus-highlight span {
+            font-family: var(--font-heading);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--volt);
+        }
+        
+                .bonus-image {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            aspect-ratio: 1/1;
+            position: relative;
+        }
+        .bonus-image img, 
+        .bonus-image video { /* Tambahkan video di sini agar rapi */
+            width: 100%; 
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.65) contrast(1.1);
+            transition: transform 0.6s ease;
+        }
+        .bonus-image:hover img, 
+        .bonus-image:hover video { /* Tambahkan video di sini juga */
+            transform: scale(1.05); 
+        }
+
+        /* ===== TAMBAHAN BARU: Posisi Video Geser Kanan ===== */
+        .bonus-image video {
+            object-position: right center; /* Ini yang membuat video fokus/gessr ke bagian kanan */
+        }
+        
+        /* ===== CTA SECTION ===== */
+        .cta {
+            padding: 100px 0;
+            border-top: 1px solid var(--gray-dark);
+        }
+        
+        .cta-box {
+            text-align: center;
+            padding: 80px 40px;
+            background: var(--black-light);
+            border: 1px solid var(--gray-dark);
+            border-radius: var(--radius-lg);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background: var(--accent);
+        }
+        
+        .cta-box .section-title {
+            margin-bottom: 16px;
+        }
+        
+        .cta-box p {
+            font-size: 16px;
+            color: var(--gray-light);
+            max-width: 500px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+        }
+        
+        /* ===== GARANSI SECTION ===== */
+        .garansi {
+            padding: 100px 0;
+            border-top: 1px solid var(--gray-dark);
+        }
+        
+        .garansi-box {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            background: var(--black-light);
+            border: 1px solid var(--gray-dark);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+        }
+        
+        .garansi-icon {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            background: rgba(255, 85, 0, 0.1);
+            font-size: 28px;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+        
+        .garansi-content h3 {
+            font-family: var(--font-heading);
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .garansi-content p {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--gray-light);
+        }
+        
+        /* ===== NB SECTION ===== */
+        .nb-section {
+            padding: 0 0 100px;
+        }
+        
+        .nb-box {
+            background: rgba(204, 255, 0, 0.05);
+            border: 1px solid rgba(204, 255, 0, 0.2);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+        }
+        
+        .nb-box h4 {
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--volt);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        
+        .nb-box p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--gray-light);
+        }
+        
+        .nb-box code {
+            font-family: 'Courier New', monospace;
+            background: rgba(204, 255, 0, 0.1);
+            color: var(--volt);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        /* ===== LOCATION SECTION ===== */
+        .location {
+            padding: 100px 0;
+            border-top: 1px solid var(--gray-dark);
+        }
+        
+        .location-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+        }
+        
+        .location-content .section-title {
+            margin-bottom: 16px;
+        }
+        
+        .location-address {
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--gray-light);
+            margin-bottom: 24px;
+        }
+        
+        .location-map-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--white);
+            background: var(--gray-dark);
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-dark);
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .location-map-btn:hover {
+            border-color: var(--accent);
+            background: rgba(255, 85, 0, 0.1);
+        }
+        
+        .location-map {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--gray-dark);
+            height: 350px;
+        }
+        
+        .location-map iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            filter: grayscale(0.8) brightness(0.7) contrast(1.1);
+        }
+        
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--gray-dark);
+        }
+        
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .footer-creator {
+            font-size: 14px;
+            color: var(--gray-mid);
+        }
+        
+        .footer-creator strong {
+            color: var(--white);
+            font-weight: 600;
+        }
+        
+        .footer-logo-kampus {
+            height: 36px;
+            width: auto;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+        
+        .footer-logo-kampus:hover {
+            opacity: 1;
+        }
+        
+        .footer-right {
+            font-size: 13px;
+            color: var(--gray-mid);
+        }
+        
+        .footer-right span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .cutting-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .cutting-grid .card:nth-child(2) {
+                grid-row: span 1;
+            }
+            
+            .why-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .nav-hamburger {
+                display: flex;
+            }
+            
+            .hero-bg {
+                width: 100%;
+                opacity: 0.3;
+            }
+            
+            .hero-bg::after {
+                background: linear-gradient(to top, var(--black) 0%, rgba(18,18,18,0.8) 100%);
+            }
+            
+            .opening-grid,
+            .bonus-grid,
+            .location-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .cutting-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .testi-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .why-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .urgency-box {
+                padding: 40px 24px;
+            }
+            
+            .cta-box {
+                padding: 60px 24px;
+            }
+            
+            .garansi-box {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .size-range {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .footer-inner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            .btn-primary {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .section-title {
+                font-size: 26px;
+            }
+        }
+    </style>
 </head>
 <body>
-
-<!-- TOPBAR -->
-<div class="topbar">Gratis konsultasi desain untuk order pertama kamu</div>
-
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">Only<span>Vendor</span></div>
-  <div class="nav-tag">Est. 2018 — Vendor Terpercaya</div>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-left">
-    <div class="hero-label">Kaos, Sablon & Custom Apparel</div>
-    <h1 class="hero-headline">
-      Kaos
-      <em>Bukan</em>
-      Kaleng-kaleng.
-    </h1>
-    <p class="hero-sub">
-      OnlyVendor hadir buat kamu yang bosan produk asal jadi. Kami vendor kaos dan sablon yang serius — mulai dari bahan, tinta, hingga jahitan.
-    </p>
-    <div class="hero-cta-group">
-      <a href="#cta" class="btn-primary">Pesan Sekarang</a>
-      <span class="hero-note">Min. order 12 pcs</span>
-    </div>
-    <div class="hero-stat-strip">
-      <div class="hero-stat"><strong>3.200+</strong><small>Order Selesai</small></div>
-      <div class="hero-stat"><strong>98%</strong><small>Puas & Repeat Order</small></div>
-      <div class="hero-stat"><strong>7 Hari</strong><small>Rata-rata Produksi</small></div>
-    </div>
-  </div>
-  <div class="hero-right">
-    <div class="hero-img-placeholder">
-      <!-- Ganti src berikut dengan foto produk kamu -->
-      <div class="ph-text"><img src="https://i.pinimg.com/736x/b4/36/ec/b436ec260b723577b64fa3784ffba95a.jpg"></div>
-    </div>
-    <div class="hero-badge">
-      <span>100%</span>
-      <span>Kualitas Terjamin</span>
-    </div>
-  </div>
-</section>
-
-<!-- OPENING -->
-<section class="opening fade-up">
-  <span class="section-tag">Kenapa OnlyVendor</span>
-  <h2>Vendor banyak, tapi tidak semua bisa dipercaya dari awal sampai barang di tangan kamu.</h2>
-  <p>Kami tahu frustrasi order kaos yang hasil akhirnya jauh dari ekspektasi. Warna pudar, sablon retak, jahitan mbleber — itu bukan standar kami. OnlyVendor berdiri justru karena masalah-masalah itu nyata dan bisa diselesaikan dengan proses yang benar.</p>
-</section>
-
-<div class="divider"></div>
-
-<!-- BENEFITS -->
-<section class="benefits">
-  <div class="benefits-header fade-up">
-    <h2>Apa yang<br><em>kamu dapat</em></h2>
-    <p>Setiap detail dipikirkan, bukan sekadar dieksekusi. Ini yang membedakan kami dari vendor biasa.</p>
-  </div>
-  <div class="benefits-grid">
-    <div class="benefit-item fade-up">
-      <div class="benefit-num">01</div>
-      <div class="benefit-title">Bahan Pilihan Tanpa Kompromi</div>
-      <p class="benefit-desc">Cotton combed 30s, CVC, hingga bahan dry-fit tersedia. Kami tidak pakai bahan kiloan tanpa identitas — kamu tahu persis apa yang kamu pesan.</p>
-    </div>
-    <div class="benefit-item fade-up">
-      <div class="benefit-num">02</div>
-      <div class="benefit-title">Sablon Awet & Tajam</div>
-      <p class="benefit-desc">Teknik plastisol, discharge, DTF, dan rubber — dipilih sesuai desain kamu. Hasilnya awet dicuci berkali-kali tanpa retak atau pudar cepat.</p>
-    </div>
-    <div class="benefit-item fade-up">
-      <div class="benefit-num">03</div>
-      <div class="benefit-title">Jahitan Rapi, Finishing Beres</div>
-      <p class="benefit-desc">Setiap kaos lewat quality control sebelum packing. Tidak ada yang lolos dengan cacat jahitan, salah ukuran, atau sablon miring.</p>
-    </div>
-    <div class="benefit-item fade-up">
-      <div class="benefit-num">04</div>
-      <div class="benefit-title">Harga Transparan</div>
-      <p class="benefit-desc">Tidak ada biaya tersembunyi. Semua sudah termasuk: bahan, sablon, jahit, dan packing. Kamu tahu angkanya dari awal, tidak kaget di akhir.</p>
-    </div>
-    <div class="benefit-item fade-up">
-      <div class="benefit-num">05</div>
-      <div class="benefit-title">Update Produksi Real-Time</div>
-      <p class="benefit-desc">Kamu tidak perlu tanya-tanya. Kami kirim laporan progres produksi secara berkala — dari cutting sampai packing selesai.</p>
-    </div>
-    <div class="benefit-item fade-up">
-      <div class="benefit-num">06</div>
-      <div class="benefit-title">Siap Skala Besar & Kecil</div>
-      <p class="benefit-desc">Mulai dari 12 pcs untuk komunitas kecil, sampai ribuan pcs untuk event besar — kapasitas produksi kami siap menyesuaikan kebutuhan kamu.</p>
-    </div>
-  </div>
-</section>
-
-<!-- REASONS -->
-<section class="reasons">
-  <div class="reasons-intro fade-up">
-    <h2>Alasan<br>Memilih<br><em>OnlyVendor</em></h2>
-    <p>Bukan sekadar klaim. Ini alasan konkret kenapa lebih dari 3.000 order dipercayakan ke kami — dan kenapa mereka terus balik lagi.</p>
-  </div>
-  <div class="reasons-list">
-    <div class="reason-row fade-up">
-      <div class="reason-index">01</div>
-      <div class="reason-content">
-        <h3>Konsultasi Desain Gratis Sebelum Produksi</h3>
-        <p>Tim kami bantu review desain kamu sebelum masuk mesin. Kalau ada potensi masalah — warna kurang kontras, ukuran sablon tidak proporsional — kami kasih tahu duluan, bukan setelah jadi barang.</p>
-      </div>
-    </div>
-    <div class="reason-row fade-up">
-      <div class="reason-index">02</div>
-      <div class="reason-content">
-        <h3>Sample Tersedia Sebelum Produksi Massal</h3>
-        <p>Order sample dulu sebelum commit ke jumlah besar. Pegang dulu barangnya, rasakan bahannya, lihat hasil sablonnya — kalau puas, baru lanjut produksi penuh.</p>
-      </div>
-    </div>
-    <div class="reason-row fade-up">
-      <div class="reason-index">03</div>
-      <div class="reason-content">
-        <h3>Pengiriman Tepat Waktu Sesuai Deadline</h3>
-        <p>Deadline event kamu adalah tanggung jawab kami. Jadwal produksi diatur ketat agar barang sampai sebelum acara, bukan pas hari H — atau lebih buruk, sesudahnya.</p>
-      </div>
-    </div>
-    <div class="reason-row fade-up">
-      <div class="reason-index">04</div>
-      <div class="reason-content">
-        <h3>Revisi Tanpa Drama Selama Proses</h3>
-        <p>Selama belum masuk tahap cutting, perubahan kecil bisa ditampung tanpa biaya tambahan. Komunikasi terbuka, tidak ada kerjasama yang kaku dan menyulitkan klien.</p>
-      </div>
-    </div>
-    <div class="reason-row fade-up">
-      <div class="reason-index">05</div>
-      <div class="reason-content">
-        <h3>Pengalaman 6+ Tahun di Industri Garmen</h3>
-        <p>Bukan vendor kemarin sore. Sudah ratusan klien — dari komunitas kampus, brand lokal, perusahaan nasional, sampai organizer event — yang percayakan produksinya ke OnlyVendor.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- TESTIMONIALS -->
-<section class="testimonials">
-  <div class="testi-header fade-up">
-    <span class="section-tag">Kata Mereka</span>
-    <h2>Bukan Kami yang Bilang</h2>
-  </div>
-  <div class="testi-grid fade-up">
-    <div class="testi-card featured">
-      <div class="testi-stars">★ ★ ★ ★ ★</div>
-      <p class="testi-quote">"Sudah coba beberapa vendor sebelumnya, hasilnya selalu ada yang kurang. Pas coba OnlyVendor, langsung beda. Sablon rata, warna sesuai, dan yang paling penting — selesai 2 hari sebelum deadline event kami. Tidak ada drama, tidak ada revisi mendadak. Langsung repeat order untuk batch kedua."</p>
-      <div class="testi-author">
-        <div class="testi-avatar">RH</div>
-        <div>
-          <div class="testi-name">Raka Hermawan</div>
-          <div class="testi-role">Ketua Panitia — Festival Kampus UGM</div>
+    <!-- NAVIGATION -->
+    <nav class="nav" id="nav">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">ONLY<span>VENDOR</span></a>
+            <ul class="nav-links">
+                <li><a href="#benefit">Ukuran & Cutting</a></li>
+                <li><a href="#why-us">Keunggulan</a></li>
+                <li><a href="#testimonials">Testimoni</a></li>
+                <li><a href="#location">Lokasi</a></li>
+            </ul>
+            <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
-      </div>
+    </nav>
+    
+    <!-- MOBILE MENU -->
+    <div class="nav-mobile" id="mobileMenu">
+        <a href="#benefit">Ukuran & Cutting</a>
+        <a href="#why-us">Keunggulan</a>
+        <a href="#testimonials">Testimoni</a>
+        <a href="#location">Lokasi</a>
     </div>
-    <div class="testi-card">
-      <div class="testi-stars">★ ★ ★ ★ ★</div>
-      <p class="testi-quote">"Order 200 pcs untuk merch brand saya. Semuanya rapi, konsisten, dan dikemas dengan baik. Tim mereka responsif banget waktu ada perubahan kecil di file desain."</p>
-      <div class="testi-author">
-        <div class="testi-avatar">SA</div>
-        <div>
-          <div class="testi-name">Sinta Andriani</div>
-          <div class="testi-role">Founder — Sinta Wear</div>
+    
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-bg">
+            <!-- ASET: streetwear oversized t-shirt mockup -->
+            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=1200&q=80" alt="Streetwear oversized t-shirt mockup" loading="eager">
         </div>
-      </div>
-    </div>
-    <div class="testi-card">
-      <div class="testi-stars">★ ★ ★ ★ ★</div>
-      <p class="testi-quote">"Harga masuk akal, kualitas tidak mengecewakan. Sudah 4x order di sini. Cocok banget untuk kaos seragam komunitas kami yang butuh konsistensi."</p>
-      <div class="testi-author">
-        <div class="testi-avatar">DK</div>
-        <div>
-          <div class="testi-name">Dimas Kurniawan</div>
-          <div class="testi-role">Koordinator — Komunitas Motor Bandung</div>
+        <div class="container">
+            <div class="hero-content fade-up">
+                <div class="hero-tag">Konveksi & Sablon Kaos</div>
+                <h1>Bebaskan Kreativitasmu, Cetak Kaos Impian <span class="accent">Tanpa Batas</span></h1>
+                <p class="hero-desc">Wujudkan desain kaos impianmu bersama Only Vendor. Sablon premium, bahan adem, dan bebas custom tanpa batas minimum order.</p>
+                <a href="https://wa.me/6289526604495?text=Halo%20Only%20Vendor%2C%20saya%20ingin%20custom%20kaos!" class="btn-primary" target="_blank" rel="noopener">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    Mulai Custom Kaosmu
+                </a>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
+    
+    <!-- OPENING -->
+    <section class="opening" id="opening">
+        <div class="container">
+            <div class="opening-grid">
+                <div class="fade-up">
+                    <div class="section-label">Tentang Kami</div>
+                    <h2 class="section-title">Vendor Sablon Terpercaya untuk Kreativitasmu</h2>
+                    <p class="section-desc" style="max-width:none;">
+                        Only Vendor adalah konveksi dan sablon kaos yang berdedikasi untuk mewujudkan setiap desain kaos impianmu. Kami melayani kustomisasi desain sendiri dengan kualitas premium, mulai dari sablon detail high-density hingga DTF yang awet dan tajam. Dengan bahan katun pilihan dan pengerjaan teliti, setiap kaos yang keluar dari workshop kami adalah bukti komitmen kami terhadap kualitas tanpa kompromi.
+                    </p>
+                </div>
+                <div class="opening-image fade-up">
+                    <!-- ASET: screen printing workshop -->
+                    <img src="mahe4.jpeg" alt="Screen printing workshop" loading="lazy">
+                    <div class="opening-image-overlay">
+                        <span>Workshop Only Vendor</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- BENEFIT / CUTTING -->
+    <section class="benefit" id="benefit">
+        <div class="container">
+            <div class="benefit-header fade-up">
+                <div class="section-label">Varian Cutting & Ukuran</div>
+                <h2 class="section-title">Semua Size, Semua Pola Potong</h2>
+                <p class="section-desc">Pilih cutting kaos yang paling cocok dengan style-mu. Tersedia dalam berbagai ukuran dari S hingga XXL++.</p>
+            </div>
+            
+                        <!-- GRID ASIMETRIS CUTTING KAOS -->
+            <div class="cutting-grid fade-up">
+                
+                <!-- KARTU 1: Info Mesin Sablon (Menggunakan foto mesin sablonmu) -->
+                <div class="cutting-card card cutting-info-card">
+                    <div class="card-img">
+                        <!-- GANTI SRC DI BAWAH DENGAN LINK FOTO MESIN SABLONMU -->
+                        <img src="mahe1.jpeg" alt="Mesin sablon premium Only Vendor" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <div class="card-tag" style="background: rgba(204, 255, 0, 0.15); color: var(--volt);">Proses</div>
+                        <h3 class="card-title">Sablon Presisi</h3>
+                        <p class="card-subtitle">Dikerjakan dengan mesin &amp; teknik terkini</p>
+                    </div>
+                </div>
+                
+                <!-- KARTU 2: Gambar Utama Kaos (Span 2 baris - Menggunakan foto kaosmu) -->
+                <div class="cutting-card card">
+                    <div class="card-img">
+                        <!-- GANTI SRC DI BAWAH DENGAN LINK FOTO KAOSMU -->
+                        <img src="mahe2.jpeg" alt="Kaos cutting premium Only Vendor" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <div class="card-tag">All Cutting</div>
+                        <h3 class="card-title">Boxy, Oversized &amp; Regular</h3>
+                        <p class="card-subtitle">Pilih potongan yang paling pas dengan style-mu</p>
+                    </div>
+                </div>
+                
+                <!-- KARTU 3: Info Pola Potong (Kartu tekstual tanpa gambar) -->
+                <div class="cutting-card card cutting-text-card">
+                    <div class="card-content" style="background: none; position: relative; padding: 40px 24px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
+                        <div class="card-tag" style="align-self: flex-start;">Detail Pola</div>
+                        <h3 class="card-title" style="font-size: 24px; margin-top: 12px;">Pola Premium</h3>
+                        <p class="card-subtitle" style="color: var(--gray-light); margin-top: 8px; font-size: 14px; line-height: 1.6;">
+                            Cuttingan long drop shoulder untuk oversized, dan pattern kotak sempurna untuk boxy fit. Semua ukuran tersedia dari S hingga XXL++.
+                        </p>
+                    </div>
+                </div>
 
-<!-- URGENCY -->
-<section class="urgency">
-  <span class="section-tag" style="color:rgba(255,255,255,0.6)">Penawaran Terbatas</span>
-  <h2>Slot Produksi<br>Bulan Ini Hampir Penuh</h2>
-  <p>Kami batasi jumlah order per bulan untuk menjaga kualitas. Kalau kamu butuh kaos dalam waktu dekat, jangan tunda — slot bisa habis kapan saja.</p>
-  <div class="countdown-strip">
-    <div class="count-box"><strong id="cd-d">07</strong><small>Hari</small></div>
-    <div class="count-sep">:</div>
-    <div class="count-box"><strong id="cd-h">14</strong><small>Jam</small></div>
-    <div class="count-sep">:</div>
-    <div class="count-box"><strong id="cd-m">32</strong><small>Menit</small></div>
-    <div class="count-sep">:</div>
-    <div class="count-box"><strong id="cd-s">09</strong><small>Detik</small></div>
-  </div>
-  <a href="#cta" class="btn-light">Amankan Slot Saya Sekarang</a>
-</section>
-
-<!-- BONUS -->
-<section class="bonus">
-  <div class="bonus-header fade-up">
-    <span class="section-tag" style="color:var(--sand)">Spesial Order Sekarang</span>
-    <h2>Bonus <span>Eksklusif</span><br>Untuk Kamu</h2>
-  </div>
-  <div class="bonus-grid fade-up">
-    <div class="bonus-item">
-      <div class="bonus-icon">Bonus 01</div>
-      <div class="bonus-tag">Gratis</div>
-      <h3>Konsultasi Desain Prioritas</h3>
-      <p>Tim desain kami review file kamu dalam 24 jam kerja — gratis, tanpa biaya tambahan. Termasuk saran teknis sablon agar hasil lebih optimal.</p>
-    </div>
-    <div class="bonus-item">
-      <div class="bonus-icon">Bonus 02</div>
-      <div class="bonus-tag">Gratis</div>
-      <h3>Custom Label Woven atau Neck Tag</h3>
-      <p>Tambahkan identitas brand kamu di kaos tanpa biaya extra untuk order minimal 50 pcs. Bisa neck tag, label jahit, atau hangtag sederhana.</p>
-    </div>
-    <div class="bonus-item">
-      <div class="bonus-icon">Bonus 03</div>
-      <div class="bonus-tag">Gratis</div>
-      <h3>Packing OPP + Sticker Branded</h3>
-      <p>Setiap kaos dikemas rapi per piece dengan plastik OPP bersih. Untuk brand yang ingin presentasi produk lebih profesional, ini sudah termasuk.</p>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<section class="cta-section" id="cta">
-  <div class="cta-left fade-up">
-    <h2>Mulai<br>Produksi<br><em>Hari Ini</em></h2>
-    <p>Isi form di samping, tim kami akan hubungi kamu dalam 1x24 jam untuk konfirmasi detail, kirim penawaran harga, dan jadwalkan produksi.</p>
-    <div class="price-block">
-      <div class="price-old">Mulai dari Rp 45.000/pcs</div>
-      <div class="price-new">Rp 38.000 <small>/ pcs</small></div>
-      <small style="color:var(--steel);font-size:13px;">*Harga tergantung bahan, teknik sablon, dan jumlah order</small>
-    </div>
-    <a href="#cta" class="btn-primary">Konsultasi Gratis Dulu</a>
-  </div>
-  <div class="cta-form fade-up">
-    <div class="form-group">
-      <label>Nama Lengkap</label>
-      <input type="text" placeholder="Nama kamu atau nama brand">
-    </div>
-    <div class="form-group">
-      <label>Nomor WhatsApp</label>
-      <input type="tel" placeholder="08xxxxxxxxxx">
-    </div>
-    <div class="form-group">
-      <label>Jumlah Order</label>
-      <select>
-        <option>12 - 50 pcs</option>
-        <option>51 - 100 pcs</option>
-        <option>101 - 300 pcs</option>
-        <option>300+ pcs</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Keperluan</label>
-      <select>
-        <option>Seragam komunitas/organisasi</option>
-        <option>Merch brand / usaha</option>
-        <option>Event / acara</option>
-        <option>Lainnya</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Catatan Tambahan (opsional)</label>
-      <textarea placeholder="Ceritakan kebutuhan kamu secara singkat..."></textarea>
-    </div>
-    <button class="btn-full">Kirim Permintaan Sekarang</button>
-    <p style="text-align:center;font-size:12px;color:var(--steel);margin-top:8px;letter-spacing:1px;">Tidak ada spam. Data kamu aman bersama kami.</p>
-  </div>
-</section>
-
-<!-- GUARANTEE -->
-<section class="guarantee fade-up">
-  <div class="guarantee-inner">
-    <div class="guarantee-seal">
-      <strong>100%</strong>
-      <span>Jaminan<br>Kualitas</span>
-    </div>
-    <div class="guarantee-content">
-      <h2>Garansi Tanpa Syarat Berbelit</h2>
-      <p>Kalau barang yang kamu terima tidak sesuai dengan yang disepakati — baik itu kualitas sablon, ukuran, atau bahan — kami siap produksi ulang tanpa biaya tambahan. Tidak perlu argumen panjang, tidak perlu negosiasi. Ini komitmen kami kepada setiap klien OnlyVendor.</p>
-    </div>
-  </div>
-</section>
-
-<!-- NB -->
-<section class="nb-section">
-  <div class="nb-inner">
-    <div class="nb-title">NB — Harap Dibaca Sebelum Order</div>
-    <ul class="nb-list">
-      <li>Harga yang tertera adalah estimasi awal. Harga final dikonfirmasi setelah konsultasi dan detail order diterima tim kami.</li>
-      <li>Minimal order berlaku 12 pcs per desain per warna. Order di bawah jumlah minimal belum bisa kami proses.</li>
-      <li>Waktu produksi 7-14 hari kerja dihitung sejak file desain disetujui dan DP diterima. Deadline mepet harap dikomunikasikan lebih awal.</li>
-      <li>File desain diterima dalam format AI, CDR, atau PNG resolusi tinggi (min. 300 dpi). File dari WhatsApp atau screenshot tidak bisa langsung diproses.</li>
-      <li>DP sebesar 50% diperlukan untuk memulai produksi. Sisa pembayaran dilunasi sebelum barang dikirim.</li>
-      <li>Revisi setelah cutting tidak dapat ditampung. Pastikan semua detail sudah final sebelum proses produksi dimulai.</li>
-      <li>Bonus berlaku untuk order yang masuk dalam periode promo dan memenuhi syarat minimum.</li>
-    </ul>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">Only<span>Vendor</span></div>
-  <p>2025 OnlyVendor. Vendor Kaos & Sablon Terpercaya.</p>
-</footer>
-
-<script>
-  // SCROLL FADE IN
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-
-  // COUNTDOWN
-  function updateCountdown() {
-    const target = new Date();
-    target.setDate(target.getDate() + 7);
-    target.setHours(23, 59, 59, 0);
-
-    const now = new Date();
-    const diff = target - now;
-
-    if (diff <= 0) return;
-
-    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const s = Math.floor((diff % (1000 * 60)) / 1000);
-
-    document.getElementById('cd-d').textContent = String(d).padStart(2, '0');
-    document.getElementById('cd-h').textContent = String(h).padStart(2, '0');
-    document.getElementById('cd-m').textContent = String(m).padStart(2, '0');
-    document.getElementById('cd-s').textContent = String(s).padStart(2, '0');
-  }
-
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
-
-  // FORM SUBMIT
-  document.querySelector('.btn-full').addEventListener('click', function() {
-    const name = document.querySelector('input[type="text"]').value;
-    const phone = document.querySelector('input[type="tel"]').value;
-    if (!name || !phone) {
-      alert('Mohon lengkapi nama dan nomor WhatsApp kamu.');
-      return;
-    }
-    this.textContent = 'Terkirim! Tim Kami Akan Segera Menghubungi.';
-    this.style.background = '#1a3a2a';
-    this.disabled = true;
-  });
-</script>
+            </div>
+            
+            <!-- SIZE RANGE -->
+            <div class="size-range fade-up">
+                <div class="size-range-text">
+                    <h3>Range Ukuran Lengkap</h3>
+                    <p>Dari S sampai XXL++ — tidak ada yang terlewat</p>
+                </div>
+                <div class="size-pills">
+                    <span class="size-pill">S</span>
+                    <span class="size-pill">M</span>
+                    <span class="size-pill">L</span>
+                    <span class="size-pill">XL</span>
+                    <span class="size-pill">XXL</span>
+                    <span class="size-pill">XXL+</span>
+                    <span class="size-pill">XXL++</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- WHY US -->
+    <section class="why-us" id="why-us">
+        <div class="container">
+            <div class="why-us-header fade-up">
+                <div class="section-label">Mengapa Only Vendor</div>
+                <h2 class="section-title">Keunggulan yang Bicara</h2>
+                <p class="section-desc">Empat alasan kuat mengapa ratusan pelanggan mempercayakan kaos custom mereka kepada kami.</p>
+            </div>
+            
+            <div class="why-grid fade-up">
+                <div class="why-card">
+                    <div class="why-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                    </div>
+                    <h3>Sablon Detail & Awet</h3>
+                    <p>Hasil cetakan tajam, detail, dan tahan lama meski dicuci berkali-kali. Teknologi sablon terkini untuk kualitas terbaik.</p>
+                </div>
+                
+                <div class="why-card">
+                    <div class="why-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                    </div>
+                    <h3>Bahan Katun Premium Adem</h3>
+                    <p>Kaos dari bahan katun berkualitas tinggi yang adem, nyaman dipakai seharian, dan tidak mudah kusut.</p>
+                </div>
+                
+                <div class="why-card">
+                    <div class="why-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </div>
+                    <h3>Bebas Custom Desain Sendiri</h3>
+                    <p>Unggah desainmu sendiri atau diskusikan konsep dengan tim kami. Kreativitasmu, kami wujudkan.</p>
+                </div>
+                
+                <div class="why-card">
+                    <div class="why-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                    </div>
+                    <h3>Tanpa Minimal Order</h3>
+                    <p>Bisa pesan satuan! Tidak ada batas minimum order. Cocok untuk kebutuhan personal maupun komunitas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- TESTIMONIALS -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <div class="testimonials-header fade-up">
+                <div class="section-label">Testimoni</div>
+                <h2 class="section-title">Kata Mereka tentang Only Vendor</h2>
+                <p class="section-desc">Ulasan jujur dari pelanggan yang sudah membuktikan kualitas kami.</p>
+            </div>
+            
+            <div class="testi-grid fade-up">
+                <div class="testi-card">
+                    <div class="testi-stars">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
+                    <p class="testi-text">"Sablon detail banget, warna tidak luntur mesku dicuci berkali-kali. Anak-anak komunitas pada puas semua. Pasti langganan terus!"</p>
+                    <div class="testi-author">
+                        <div class="testi-avatar">R</div>
+                        <div>
+                            <div class="testi-name">Rizky Pratama</div>
+                            <div class="testi-role">Ketua Komunitas Rider Tasik</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testi-card">
+                    <div class="testi-stars">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
+                    <p class="testi-text">"Order kaos untuk brand lokal kami, hasilnya premium banget. Bahan adem, cutting oversized pas. Harga bersahabat untuk kualitas segini."</p>
+                    <div class="testi-author">
+                        <div class="testi-avatar">D</div>
+                        <div>
+                            <div class="testi-name">Dina Maulida</div>
+                            <div class="testi-role">Owner, DNM Clothing Co.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testi-card">
+                    <div class="testi-stars">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
+                    <p class="testi-text">"Bisa pesan satuan itu game changer! Desain sendiri, dikirim cepat, dan bonus stikernya keren. Recommended banget buat yang mau custom kaos."</p>
+                    <div class="testi-author">
+                        <div class="testi-avatar">A</div>
+                        <div>
+                            <div class="testi-name">Asep Saepudin</div>
+                            <div class="testi-role">Pelanggan Satuan</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- URGENCY -->
+    <section class="urgency">
+        <div class="container">
+            <div class="urgency-box fade-up">
+                <div class="section-label">Slot Terbatas</div>
+                <h2 class="section-title">Jangan Sampai Ketinggalan Antrean</h2>
+                <p class="urgency-desc">Slot produksi kami terbatas setiap minggunya untuk menjaga kualitas setiap pesanan. Semakin lama menunda, semakin panjang antrean sablon.</p>
+                <div class="urgency-badge">Slot Minggu Ini Terbatas</div>
+                <br><br>
+                <a href="https://wa.me/6289526604495?text=Halo%20Only%20Vendor%2C%20saya%20ingin%20pesan%20kaos%20custom!" class="btn-primary" target="_blank" rel="noopener">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    Amankan Slotmu Sekarang
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ==================== BONUS SECTION ==================== -->
+    <section class="bonus" id="bonus">
+        <div class="container">
+            <div class="bonus-grid">
+                <div class="bonus-content fade-up">
+                    <div class="section-label">Kebebasan Kreatif</div>
+                    <h2 class="section-title">Bonus Sablon Bebas Desain Sendiri</h2>
+                    <p>Tidak perlu pusing lagi cari vendor yang mau terima desain buatanmu sendiri. Di Only Vendor, kebebasan berkreasi adalah hak mutlakmu. Desain sekompleks apapun, kami sablon dengan presisi tinggi. Lihat sendiri proses sablon detail kami di samping.</p>
+                    <div class="bonus-highlight">
+                        <div class="bonus-highlight-icon">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        </div>
+                        <span>Bebas request desain tanpa biaya tambahan!</span>
+                    </div>
+                </div>
+                <div class="bonus-image fade-up">
+                    <video autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover; filter:brightness(0.65) contrast(1.1); object-position: right center;">
+                      <source src="mahe3.mp4" type="video/mp4">
+                      Browser Anda tidak mendukung tag video ini.
+                    </video>
+                    <div class="bonus-image-badge">BEBAS DESAIN</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-box fade-up">
+                <div class="section-label">Siap Membuat Kaos Impianmu?</div>
+                <h2 class="section-title">Mulai Custom Kaosmu Sekarang</h2>
+                <p>Konsultasikan desainmu langsung melalui WhatsApp. Tim kami siap membantu dari konsep hingga produksi.</p>
+                <a href="https://wa.me/6289526604495?text=Halo%20Only%20Vendor%2C%20saya%20ingin%20mulai%20custom%20kaos!" class="btn-primary" target="_blank" rel="noopener" style="font-size:17px; padding:18px 40px;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    Mulai Custom Kaosmu Sekarang
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- GARANSI -->
+    <section class="garansi">
+        <div class="container">
+            <div class="garansi-box fade-up">
+                <div class="garansi-icon">
+                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div class="garansi-content">
+                    <h3>Garansi Kualitas Sablon</h3>
+                    <p>Jika sablon rusak atau hasil cetakan tidak sesuai dengan desain awal yang telah disetujui, kami berikan garansi cetak ulang tanpa biaya tambahan. Kepuasan dan kepercayaanmu adalah prioritas utama kami.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- NB -->
+    <section class="nb-section">
+        <div class="container">
+            <div class="nb-box fade-up">
+                <h4>CATATAN PENTING - FORMAT FILE DESAIN</h4>
+                <p>Untuk hasil cetakan terbaik, kirimkan file desain dalam format <code>PNG Transparan</code> (resolusi minimal 300 DPI) atau format vektor <code>CDR</code> / <code>AI</code>. Hindari pengiriman file berformat JPG dengan latar belakang putih karena dapat memengaruhi ketajaman dan akurasi warna sablon.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- LOCATION -->
+    <section class="location" id="location">
+        <div class="container">
+            <div class="location-grid">
+                <div class="location-content fade-up">
+                    <div class="section-label">Lokasi Workshop</div>
+                    <h2 class="section-title">Temukan Kami</h2>
+                    <p class="location-address">
+                        Jalan Tentara Pelajar Gang Nuri, RT.3/RW.4, Citapen Kidul, Kelurahan Empangsari, Kecamatan Tawang (No. 45), Kota Tasikmalaya, Jawa Barat, 46113
+                    </p>
+                    <a href="https://www.google.com/maps/search/?api=1&query=Jalan+Tentara+Pelajar+Gang+Nuri+RT3+RW4+Citapen+Kidul+Empangsari+Tawang+Tasikmalaya+Jawa+Barat" class="location-map-btn" target="_blank" rel="noopener">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Buka di Google Maps
+                    </a>
+                </div>
+                <div class="location-map fade-up">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3955.9!2d108.2!3d-7.33!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sTawang%2C+Tasikmalaya!5e0!3m2!1sid!2sid!4v1" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-left">
+                    <span class="footer-creator">Dibuat oleh <strong>Mahendra Sujana</strong></span>
+                    <img src="https://pmb.stmik-dci.ac.id/wp-content/uploads/2021/07/1.png" alt="Logo Kampus" class="footer-logo-kampus">
+                </div>
+                <div class="footer-right">
+                    <span>ONLY</span>VENDOR &mdash; Konveksi & Sablon Kaos Custom
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JAVASCRIPT -->
+    <script>
+        // ===== SCROLL: Nav background change =====
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+        
+        // ===== MOBILE MENU =====
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('open');
+            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+        });
+        
+        // Close mobile menu when clicking a link
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                mobileMenu.classList.remove('open');
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // ===== INTERSECTION OBSERVER: Fade-up animations =====
+        const fadeElements = document.querySelectorAll('.fade-up');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -40px 0px'
+        });
+        
+        fadeElements.forEach(el => observer.observe(el));
+    </script>
 </body>
 </html>
